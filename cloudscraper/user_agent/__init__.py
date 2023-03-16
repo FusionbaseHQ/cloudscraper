@@ -6,6 +6,7 @@ import sys
 import ssl
 
 from collections import OrderedDict
+from browser_data import browsers_data
 
 # ------------------------------------------------------------------------------- #
 
@@ -71,11 +72,15 @@ class User_Agent():
             sys.tracebacklimit = 0
             raise RuntimeError("Sorry you can't have mobile and desktop disabled at the same time.")
 
-        with open(os.path.join(os.path.dirname(__file__), 'browsers.json'), 'r') as fp:
-            user_agents = json.load(
-                fp,
-                object_pairs_hook=OrderedDict
-            )
+        # Caused an issue with too many open files on lambda, if to many requests are made in parallel
+        # Fix it by importing the file directly as python package
+        user_agents = json.loads(json.dumps(browsers_data), object_pairs_hook=OrderedDict)
+        
+        # with open(os.path.join(os.path.dirname(__file__), 'browsers.json'), 'r') as fp:
+        #     user_agents = json.load(
+        #         fp,
+        #         object_pairs_hook=OrderedDict
+        #     )
 
         if self.custom:
             if not self.tryMatchCustom(user_agents):
@@ -122,3 +127,14 @@ class User_Agent():
             self.headers['Accept-Encoding'] = ','.join([
                 encoding for encoding in self.headers['Accept-Encoding'].split(',') if encoding.strip() != 'br'
             ]).strip()
+            
+            
+if __name__ == '__main__':
+    with open(os.path.join(os.path.dirname(__file__), 'browsers.json'), 'r') as fp:
+        user_agents = json.load(
+            fp,
+            object_pairs_hook=OrderedDict
+        )
+
+    from rich import print
+    print(json.loads(json.dumps(browsers_data), object_pairs_hook=OrderedDict))
