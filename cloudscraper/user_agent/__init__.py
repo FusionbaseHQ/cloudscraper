@@ -129,12 +129,12 @@ class User_Agent():
             ]).strip()
             
             
-if __name__ == '__main__':
-    with open(os.path.join(os.path.dirname(__file__), 'browsers.json'), 'r') as fp:
-        user_agents = json.load(
-            fp,
-            object_pairs_hook=OrderedDict
-        )
+# if __name__ == '__main__':
+#     with open(os.path.join(os.path.dirname(__file__), 'browsers.json'), 'r') as fp:
+#         user_agents = json.load(
+#             fp,
+#             object_pairs_hook=OrderedDict
+#         )
 
-    from rich import print
-    print(json.loads(json.dumps(browsers_data), object_pairs_hook=OrderedDict))
+#     from rich import print
+#     print(json.loads(json.dumps(browsers_data), object_pairs_hook=OrderedDict))
